@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import unittest, tempfile
+import unittest, tempfile, os
 from videocopymanager import VideoCopyManager
 
 class TestVideoCopyManager(unittest.TestCase):
@@ -43,3 +43,12 @@ class TestVideoCopyManager(unittest.TestCase):
         vcm = VideoCopyManager(tmpFile.name,self.target.name)
         with self.assertRaises(TypeError):
             vcm.bothFoldersExist()
+
+    def testGetFilesInFolder(self):
+        """
+        Assert 5 created files are found in TemporaryFolder
+        :return:
+        """
+        for i in range(5):
+            open(os.path.join(self.source.name,str(i)), 'wb')
+        self.assertEqual(5,len(self.vcm.getFilesInFolder(self.source.name)))

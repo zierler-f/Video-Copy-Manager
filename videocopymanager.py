@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os
+import os, glob, sys
 
 class VideoCopyManager(object):
 
@@ -13,3 +13,10 @@ class VideoCopyManager(object):
                             ') or the provided target folder (' + self.target +
                             ') does not exist in the file system.')
         return True
+
+    def getFilesInFolder(self,path):
+        files = []
+        for root, subFolders, dirFiles in os.walk(path):
+            for file in dirFiles:
+                files.append(file)
+        return files
