@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 
-import unittest, tempfile, os
+import os
+import tempfile
+import unittest
+
 from videocopymanager import VideoCopyManager
 
-class TestVideoCopyManager(unittest.TestCase):
 
+class TestVideoCopyManager(unittest.TestCase):
     source = tempfile.TemporaryDirectory()
     target = tempfile.TemporaryDirectory()
-    vcm = VideoCopyManager(source.name,target.name)
+    vcm = VideoCopyManager(source.name, target.name)
 
     def test_video_copy_manager_creation(self):
         """
@@ -24,23 +27,23 @@ class TestVideoCopyManager(unittest.TestCase):
         nullPath = "/dev/null/file"
         tmpFile = tempfile.TemporaryFile()
 
-        vcm = VideoCopyManager(nullPath,self.target.name)
+        vcm = VideoCopyManager(nullPath, self.target.name)
         with self.assertRaises(TypeError):
             vcm.both_folders_exist()
 
-        vcm = VideoCopyManager(self.source.name,nullPath)
+        vcm = VideoCopyManager(self.source.name, nullPath)
         with self.assertRaises(TypeError):
             vcm.both_folders_exist()
 
-        vcm = VideoCopyManager(nullPath,nullPath)
+        vcm = VideoCopyManager(nullPath, nullPath)
         with self.assertRaises(TypeError):
             vcm.both_folders_exist()
 
-        vcm = VideoCopyManager(self.source.name,tmpFile.name)
+        vcm = VideoCopyManager(self.source.name, tmpFile.name)
         with self.assertRaises(TypeError):
             vcm.both_folders_exist()
 
-        vcm = VideoCopyManager(tmpFile.name,self.target.name)
+        vcm = VideoCopyManager(tmpFile.name, self.target.name)
         with self.assertRaises(TypeError):
             vcm.both_folders_exist()
 
@@ -50,13 +53,13 @@ class TestVideoCopyManager(unittest.TestCase):
         :return:
         """
         tmp_dir = tempfile.TemporaryDirectory()
-        file1 = os.path.join(tmp_dir.name,"file")
-        dir1 = os.path.join(tmp_dir.name,"dir")
-        file2 = os.path.join(dir1,"file")
-        file3 = os.path.join(dir1,"file1")
-        dir2 = os.path.join(dir1,"dir")
-        file4 = os.path.join(dir2,"file")
-        file5 = os.path.join(dir2,"file1")
+        file1 = os.path.join(tmp_dir.name, "file")
+        dir1 = os.path.join(tmp_dir.name, "dir")
+        file2 = os.path.join(dir1, "file")
+        file3 = os.path.join(dir1, "file1")
+        dir2 = os.path.join(dir1, "dir")
+        file4 = os.path.join(dir2, "file")
+        file5 = os.path.join(dir2, "file1")
         open(file1, 'wb')
         os.mkdir(dir1)
         open(file2, 'wb')
@@ -78,13 +81,13 @@ class TestVideoCopyManager(unittest.TestCase):
         :return:
         """
         tmp_dir = tempfile.TemporaryDirectory()
-        file1 = os.path.join(tmp_dir.name,"file.mp4")
-        dir1 = os.path.join(tmp_dir.name,"dir")
-        file2 = os.path.join(dir1,"file")
-        file3 = os.path.join(dir1,"file.mkv")
-        dir2 = os.path.join(dir1,"dir")
-        file4 = os.path.join(dir2,"file")
-        file5 = os.path.join(dir2,"file.flv")
+        file1 = os.path.join(tmp_dir.name, "file.mp4")
+        dir1 = os.path.join(tmp_dir.name, "dir")
+        file2 = os.path.join(dir1, "file")
+        file3 = os.path.join(dir1, "file.mkv")
+        dir2 = os.path.join(dir1, "dir")
+        file4 = os.path.join(dir2, "file")
+        file5 = os.path.join(dir2, "file.flv")
         open(file1, 'wb')
         os.mkdir(dir1)
         open(file2, 'wb')
@@ -97,4 +100,3 @@ class TestVideoCopyManager(unittest.TestCase):
         self.assertTrue(result.__contains__(file1))
         self.assertTrue(result.__contains__(file3))
         self.assertTrue(result.__contains__(file5))
-

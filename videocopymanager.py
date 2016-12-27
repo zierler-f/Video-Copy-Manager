@@ -1,17 +1,18 @@
 #!/usr/bin/env python
-import os, mimetypes, re
+import mimetypes
+import os
+import re
 
 
 def is_video_file(type):
     try:
-        return re.search("video\/.*",type);
+        return re.search("video\/.*", type);
     except TypeError:
         return False
 
 
 class VideoCopyManager(object):
-
-    def __init__(self,source,target):
+    def __init__(self, source, target):
         self.source = source
         self.target = target
         mimetypes.init()
@@ -27,11 +28,11 @@ class VideoCopyManager(object):
         files = []
         for root, subFolders, dirFiles in os.walk(path):
             for file in dirFiles:
-                filepath = os.path.join(root,file)
+                filepath = os.path.join(root, file)
                 files.append(filepath)
         return files
 
-    def get_video_files_in_folder_recursive(self,path):
+    def get_video_files_in_folder_recursive(self, path):
         files = []
         for file in self.get_files_in_folder_recursive(path):
             type = mimetypes.guess_type(file)[0]
