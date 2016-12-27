@@ -2,6 +2,8 @@
 import mimetypes
 import os
 import re
+import sys
+from shutil import copyfile
 
 
 def is_video_file(type):
@@ -33,6 +35,7 @@ class VideoCopyManager:
     def __init__(self, source, target):
         self.source = source
         self.target = target
+        self.both_folders_exist()
         mimetypes.init()
 
     def both_folders_exist(self):
@@ -51,8 +54,30 @@ class VideoCopyManager:
             filename_s = os.path.basename(file_s)
             for file_t in files_target:
                 filename_t = os.path.basename(file_t)
-                if filename_s is filename_t:
+                if filename_s == filename_t:
                     flag = True
             if not flag:
                 missing_files.append(file_s)
         return missing_files
+
+    def print_files_missing_in_target(self):
+        for file in self.get_files_missing_in_target():
+            print(file)
+
+    def copy_missing_files_to_target(self):
+        for file in self.get_files_missing_in_target():
+            copyfile(file,os.path.join(self.target,os.path.basename(file)))
+
+if __name__ == '__main__':
+    if not len(sys.argv) == 4:
+        raise TypeError("Please provide 3 arguments: videocopymanager.py <run_type> <source> <target>.")
+    run_type = sys.argv[1]
+    source = sys.argv[2]
+    target = sys.argv[3]
+    vcm = VideoCopyManager(source,target)
+    if run_type == 'show':
+        vcm.print_files_missing_in_target()
+    elif run_type == 'cp':
+        vcm.copy_missing_files_to_target()
+    else:
+        raise TypeError("Please use a valid argument for type. Valid arguments are 'show' and 'cp'!")

@@ -27,25 +27,16 @@ class TestVideoCopyManager(unittest.TestCase):
         nullPath = "/dev/null/file"
         tmpFile = tempfile.TemporaryFile()
 
-        vcm = VideoCopyManager(nullPath, self.target.name)
         with self.assertRaises(TypeError):
-            vcm.both_folders_exist()
-
-        vcm = VideoCopyManager(self.source.name, nullPath)
+            VideoCopyManager(nullPath, self.target.name)
         with self.assertRaises(TypeError):
-            vcm.both_folders_exist()
-
-        vcm = VideoCopyManager(nullPath, nullPath)
+            VideoCopyManager(self.source.name, nullPath)
         with self.assertRaises(TypeError):
-            vcm.both_folders_exist()
-
-        vcm = VideoCopyManager(self.source.name, tmpFile.name)
+            VideoCopyManager(nullPath, nullPath)
         with self.assertRaises(TypeError):
-            vcm.both_folders_exist()
-
-        vcm = VideoCopyManager(tmpFile.name, self.target.name)
+            VideoCopyManager(self.source.name, tmpFile.name)
         with self.assertRaises(TypeError):
-            vcm.both_folders_exist()
+            VideoCopyManager(tmpFile.name, self.target.name)
 
     def test_get_files_in_folder(self):
         """
@@ -100,3 +91,42 @@ class TestVideoCopyManager(unittest.TestCase):
         self.assertTrue(result.__contains__(file1))
         self.assertTrue(result.__contains__(file3))
         self.assertTrue(result.__contains__(file5))
+
+    def test_get_files_missing_in_target(self):
+        """
+        Create files in source and target and make sure missing files are correct
+        :return:
+        """
+        file1_src = os.path.join(self.source.name,"file1.mp4")
+        file1_tgt = os.path.join(self.target.name,"file1.mp4")
+        file2_src = os.path.join(self.source.name,"file2.mp4")
+        dir1_src = os.path.join(self.source.name,"dir1_src")
+        dir1_tgt = os.path.join(self.target.name,"dir1_tgt")
+        file3_src = os.path.join(dir1_src,"file3.mp4")
+        file4_tgt = os.path.join(dir1_tgt,"file4.mp4")
+        file5_src = os.path.join(dir1_src,"file5.mp4")
+        file5_tgt = os.path.join(dir1_tgt,"file5.mp4")
+        dir2_src = os.path.join(dir1_src,"dir2_src")
+        dir2_tgt = os.path.join(dir1_tgt,"dir2_tgt")
+        file3_tgt = os.path.join(dir2_tgt,"file3.mp4")
+        file6_src = os.path.join(dir2_src,"file6.mp4")
+
+        open(file1_src,'wb')
+        open(file1_tgt,'wb')
+        open(file2_src,'wb')
+        os.mkdir(dir1_src)
+        os.mkdir(dir1_tgt)
+        open(file3_src,'wb')
+        open(file4_tgt,'wb')
+        open(file5_src,'wb')
+        open(file5_tgt,'wb')
+        os.mkdir(dir2_src)
+        os.mkdir(dir2_tgt)
+        open(file3_tgt,'wb')
+        open(file6_src,'wb')
+
+        vcm = VideoCopyManager(self.source.name,self.target.name)
+        result = vcm.get_files_missing_in_target()
+        self.assertEqual(2,len(result))
+        self.assertTrue(result.__contains__(file2_src))
+        self.assertTrue(result.__contains__(file6_src))
