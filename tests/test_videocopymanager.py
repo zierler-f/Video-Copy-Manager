@@ -3,7 +3,7 @@
 import os
 import tempfile
 import unittest
-
+import videocopymanager
 from videocopymanager import VideoCopyManager
 
 
@@ -67,7 +67,7 @@ class TestVideoCopyManager(unittest.TestCase):
         os.mkdir(dir2)
         open(file4, 'wb')
         open(file5, 'wb')
-        result = self.vcm.get_files_in_folder_recursive(tmp_dir.name)
+        result = videocopymanager.get_files_in_folder_recursive(tmp_dir.name)
         self.assertEqual(5, len(result))
         self.assertTrue(result.__contains__(file1))
         self.assertTrue(result.__contains__(file2))
@@ -95,7 +95,7 @@ class TestVideoCopyManager(unittest.TestCase):
         os.mkdir(dir2)
         open(file4, 'wb')
         open(file5, 'wb')
-        result = self.vcm.get_video_files_in_folder_recursive(tmp_dir.name)
+        result = videocopymanager.get_video_files_in_folder_recursive(tmp_dir.name)
         self.assertEqual(3, len(result))
         self.assertTrue(result.__contains__(file1))
         self.assertTrue(result.__contains__(file3))
