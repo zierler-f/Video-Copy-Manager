@@ -90,3 +90,7 @@ ENV/
 
 # PyCharm/IntelliJ Files
 .idea/
+
+# Sonarqube Files
+.sonar/
+sonar-project.properties

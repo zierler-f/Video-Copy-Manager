@@ -29,19 +29,19 @@ class TestVideoCopyManager(unittest.TestCase):
         """
         self.assertTrue(self.vcm.both_folders_exist())
 
-        nullPath = "/dev/null/file"
-        tmpFile = tempfile.TemporaryFile()
+        null_path = "/dev/null/file"
+        tmp_file = tempfile.TemporaryFile()
 
         with self.assertRaises(TypeError):
-            VideoCopyManager(nullPath, self.target.name)
+            VideoCopyManager(null_path, self.target.name)
         with self.assertRaises(TypeError):
-            VideoCopyManager(self.source.name, nullPath)
+            VideoCopyManager(self.source.name, null_path)
         with self.assertRaises(TypeError):
-            VideoCopyManager(nullPath, nullPath)
+            VideoCopyManager(null_path, null_path)
         with self.assertRaises(TypeError):
-            VideoCopyManager(self.source.name, tmpFile.name)
+            VideoCopyManager(self.source.name, tmp_file.name)
         with self.assertRaises(TypeError):
-            VideoCopyManager(tmpFile.name, self.target.name)
+            VideoCopyManager(tmp_file.name, self.target.name)
 
     def test_get_files_in_folder(self):
         """

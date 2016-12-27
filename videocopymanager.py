@@ -15,8 +15,8 @@ def is_video_file(type):
 
 def get_files_in_folder_recursive(path):
     files = []
-    for root, subFolders, dirFiles in os.walk(path):
-        for file in dirFiles:
+    for root, sub_folders, dir_files in os.walk(path):
+        for file in dir_files:
             filepath = os.path.join(root, file)
             files.append(filepath)
     return files
@@ -68,8 +68,7 @@ class VideoCopyManager:
 
     def get_ignore_filenames(self):
         ignore_filenames = []
-        if self.ignore_file is not None:
-            if os.path.isfile(self.ignore_file):
+        if self.ignore_file is not None and os.path.isfile(self.ignore_file):
                 with open(self.ignore_file) as f:
                     for line in f:
                         ignore_filenames.append(line)
