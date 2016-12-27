@@ -69,9 +69,9 @@ class VideoCopyManager:
     def get_ignore_filenames(self):
         ignore_filenames = []
         if self.ignore_file is not None and os.path.isfile(self.ignore_file):
-                with open(self.ignore_file) as f:
-                    for line in f:
-                        ignore_filenames.append(line)
+            with open(self.ignore_file) as f:
+                for line in f:
+                    ignore_filenames.append(line)
         return ignore_filenames
 
     def print_files_missing_in_target(self):
