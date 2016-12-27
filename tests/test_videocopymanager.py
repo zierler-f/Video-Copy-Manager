@@ -10,7 +10,11 @@ from videocopymanager import VideoCopyManager
 class TestVideoCopyManager(unittest.TestCase):
     source = tempfile.TemporaryDirectory()
     target = tempfile.TemporaryDirectory()
-    vcm = VideoCopyManager(source.name, target.name)
+    ignore_file = tempfile.NamedTemporaryFile()
+    f = open(ignore_file.name,'w')
+    f.write("file7.mp4")
+    f.close()
+    vcm = VideoCopyManager(source.name, target.name, None, ignore_file.name)
 
     def test_video_copy_manager_creation(self):
         """
@@ -110,6 +114,7 @@ class TestVideoCopyManager(unittest.TestCase):
         dir2_tgt = os.path.join(dir1_tgt,"dir2_tgt")
         file3_tgt = os.path.join(dir2_tgt,"file3.mp4")
         file6_src = os.path.join(dir2_src,"file6.mp4")
+        file7_src = os.path.join(dir2_src,"file7.mp4")
 
         open(file1_src,'wb')
         open(file1_tgt,'wb')
@@ -124,9 +129,9 @@ class TestVideoCopyManager(unittest.TestCase):
         os.mkdir(dir2_tgt)
         open(file3_tgt,'wb')
         open(file6_src,'wb')
+        open(file7_src,'wb')
 
-        vcm = VideoCopyManager(self.source.name,self.target.name)
-        result = vcm.get_files_missing_in_target()
+        result = self.vcm.get_files_missing_in_target()
         self.assertEqual(2,len(result))
         self.assertTrue(result.__contains__(file2_src))
         self.assertTrue(result.__contains__(file6_src))
