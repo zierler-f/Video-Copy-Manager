@@ -49,6 +49,12 @@ class TestVideoCopyManager(unittest.TestCase):
         Assert 5 created files are found in TemporaryFolder
         :return:
         """
-        for i in range(5):
-            open(os.path.join(self.source.name,str(i)), 'wb')
-        self.assertEqual(5,len(self.vcm.getFilesInFolder(self.source.name)))
+        tmp_dir = tempfile.TemporaryDirectory()
+        open(os.path.join(tmp_dir.name,"file"), 'wb')
+        os.mkdir(os.path.join(tmp_dir.name,"dir"))
+        open(os.path.join(tmp_dir.name,"dir","file"), 'wb')
+        open(os.path.join(tmp_dir.name,"dir","file1"), 'wb')
+        os.mkdir(os.path.join(tmp_dir.name,"dir","dir"))
+        open(os.path.join(tmp_dir.name,"dir","dir","file"), 'wb')
+        open(os.path.join(tmp_dir.name,"dir","dir","file1"), 'wb')
+        self.assertEqual(5,len(self.vcm.getFilesInFolder(tmp_dir.name)))
