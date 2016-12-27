@@ -83,9 +83,12 @@ class VideoCopyManager:
         for file in self.get_files_missing_in_target():
             cp_target = self.cp_target
             if not os.path.isdir(cp_target):
-                print(cp_target + " not found. Now using target (" +  self.target + ") instead.")
+                print(cp_target + " not found. Now using target (" + self.target + ") instead.")
                 cp_target = target
-            copyfile(file,os.path.join(cp_target,os.path.basename(file)))
+            print('Now copying ' + file + ".")
+            copyfile(file, os.path.join(cp_target, os.path.basename(file)))
+            print('Successfully copied ' + file + ".")
+
 
 if __name__ == '__main__':
     args_len = len(sys.argv)
@@ -98,7 +101,7 @@ if __name__ == '__main__':
         if args_len == 6:
             cp_target = sys.argv[4]
             ignore_file = sys.argv[5]
-        vcm = VideoCopyManager(source,target,cp_target,ignore_file)
+        vcm = VideoCopyManager(source, target, cp_target, ignore_file)
         if run_type == 'show':
             vcm.print_files_missing_in_target()
         elif run_type == 'cp':
@@ -106,5 +109,5 @@ if __name__ == '__main__':
         else:
             raise TypeError("Please use a valid argument for type. Valid arguments are 'show' and 'cp'!")
     else:
-        raise TypeError("Please provide 3 - 5 arguments: videocopymanager.py <run_type> <source> <target> [<copy-target>] [<ignorefile>].")
-
+        raise TypeError(
+            "Please provide 3 - 5 arguments: videocopymanager.py <run_type> <source> <target> [<copy-target>] [<ignorefile>].")
