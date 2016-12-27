@@ -71,3 +71,30 @@ class TestVideoCopyManager(unittest.TestCase):
         self.assertTrue(result.__contains__(file3))
         self.assertTrue(result.__contains__(file4))
         self.assertTrue(result.__contains__(file5))
+
+    def test_get_video_files_in_folder(self):
+        """
+        Assert 3 created video files are found in TemporaryFolder and non-video files are not found
+        :return:
+        """
+        tmp_dir = tempfile.TemporaryDirectory()
+        file1 = os.path.join(tmp_dir.name,"file.mp4")
+        dir1 = os.path.join(tmp_dir.name,"dir")
+        file2 = os.path.join(dir1,"file")
+        file3 = os.path.join(dir1,"file.mkv")
+        dir2 = os.path.join(dir1,"dir")
+        file4 = os.path.join(dir2,"file")
+        file5 = os.path.join(dir2,"file.flv")
+        open(file1, 'wb')
+        os.mkdir(dir1)
+        open(file2, 'wb')
+        open(file3, 'wb')
+        os.mkdir(dir2)
+        open(file4, 'wb')
+        open(file5, 'wb')
+        result = self.vcm.get_video_files_in_folder_recursive(tmp_dir.name)
+        self.assertEqual(3, len(result))
+        self.assertTrue(result.__contains__(file1))
+        self.assertTrue(result.__contains__(file3))
+        self.assertTrue(result.__contains__(file5))
+
