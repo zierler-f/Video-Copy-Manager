@@ -115,4 +115,5 @@ class VideoCopyManager:
 
 
 if __name__ == "__main__":
-    main(sys.argv.pop(0))
+    sys.argv.pop(0)
+    main(sys.argv)
