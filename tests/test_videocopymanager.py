@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
-import os
 import io
+import os
 import sys
 import tempfile
 import unittest
+
 import videocopymanager
 from videocopymanager import VideoCopyManager
 
@@ -151,14 +152,14 @@ class TestVideoCopyManager(unittest.TestCase):
         with self.assertRaises(TypeError):
             videocopymanager.main("Test")
         with self.assertRaises(TypeError):
-            videocopymanager.main(["test","test"])
+            videocopymanager.main(["test", "test"])
         with self.assertRaises(TypeError):
-            videocopymanager.main(["test","test","test","test"])
+            videocopymanager.main(["test", "test", "test", "test"])
         with self.assertRaises(TypeError):
-            videocopymanager.main(["test","test","test","test","test","test"])
+            videocopymanager.main(["test", "test", "test", "test", "test", "test"])
         source = tempfile.TemporaryDirectory()
         target = tempfile.TemporaryDirectory()
-        cp_target = os.path.join(target.name,"cp_tgt")
+        cp_target = os.path.join(target.name, "cp_tgt")
         os.mkdir(cp_target)
         ignore_file = tempfile.NamedTemporaryFile()
         f = open(ignore_file.name, "w")
@@ -168,17 +169,17 @@ class TestVideoCopyManager(unittest.TestCase):
         file1_tgt = os.path.join(target.name, "file1.mp4")
         file2_src = os.path.join(source.name, "file2.mp4")
         file3_src = os.path.join(source.name, "file3.mp4")
-        open(file1_src,"wb")
-        open(file1_tgt,"wb")
-        open(file2_src,"wb")
-        open(file3_src,"wb")
+        open(file1_src, "wb")
+        open(file1_tgt, "wb")
+        open(file2_src, "wb")
+        open(file3_src, "wb")
         out = io.StringIO()
         sys.stdout = out
-        videocopymanager.main(["show",source.name,target.name,cp_target,ignore_file.name])
+        videocopymanager.main(["show", source.name, target.name, cp_target, ignore_file.name])
         expected_out = file3_src
-        self.assertEqual(expected_out,out.getvalue().strip())
-        videocopymanager.main(["cp",source.name,target.name,cp_target,ignore_file.name])
-        videocopymanager.main(["show",source.name,target.name,cp_target,ignore_file.name])
+        self.assertEqual(expected_out, out.getvalue().strip())
+        videocopymanager.main(["cp", source.name, target.name, cp_target, ignore_file.name])
+        videocopymanager.main(["show", source.name, target.name, cp_target, ignore_file.name])
         expected_out += "\nNow copying " + file3_src + ".\n" + \
                         "Successfully copied " + file3_src + "."
-        self.assertEqual(expected_out,out.getvalue().strip())
+        self.assertEqual(expected_out, out.getvalue().strip())
