@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 import os
+import io
+import sys
 import tempfile
 import unittest
-
 import videocopymanager
 from videocopymanager import VideoCopyManager
 
@@ -12,7 +13,7 @@ class TestVideoCopyManager(unittest.TestCase):
     source = tempfile.TemporaryDirectory()
     target = tempfile.TemporaryDirectory()
     ignore_file = tempfile.NamedTemporaryFile()
-    f = open(ignore_file.name, 'w')
+    f = open(ignore_file.name, "w")
     f.write("file7.mp4")
     f.close()
     vcm = VideoCopyManager(source.name, target.name, None, ignore_file.name)
@@ -56,13 +57,13 @@ class TestVideoCopyManager(unittest.TestCase):
         dir2 = os.path.join(dir1, "dir")
         file4 = os.path.join(dir2, "file")
         file5 = os.path.join(dir2, "file1")
-        open(file1, 'wb')
+        open(file1, "wb")
         os.mkdir(dir1)
-        open(file2, 'wb')
-        open(file3, 'wb')
+        open(file2, "wb")
+        open(file3, "wb")
         os.mkdir(dir2)
-        open(file4, 'wb')
-        open(file5, 'wb')
+        open(file4, "wb")
+        open(file5, "wb")
         result = videocopymanager.get_files_in_folder_recursive(tmp_dir.name)
         self.assertEqual(5, len(result))
         self.assertTrue(result.__contains__(file1))
@@ -84,13 +85,13 @@ class TestVideoCopyManager(unittest.TestCase):
         dir2 = os.path.join(dir1, "dir")
         file4 = os.path.join(dir2, "file")
         file5 = os.path.join(dir2, "file.flv")
-        open(file1, 'wb')
+        open(file1, "wb")
         os.mkdir(dir1)
-        open(file2, 'wb')
-        open(file3, 'wb')
+        open(file2, "wb")
+        open(file3, "wb")
         os.mkdir(dir2)
-        open(file4, 'wb')
-        open(file5, 'wb')
+        open(file4, "wb")
+        open(file5, "wb")
         result = videocopymanager.get_video_files_in_folder_recursive(tmp_dir.name)
         self.assertEqual(3, len(result))
         self.assertTrue(result.__contains__(file1))
@@ -106,7 +107,7 @@ class TestVideoCopyManager(unittest.TestCase):
         source = tempfile.TemporaryDirectory()
         target = tempfile.TemporaryDirectory()
         ignore_file = tempfile.NamedTemporaryFile()
-        f = open(ignore_file.name, 'w')
+        f = open(ignore_file.name, "w")
         f.write("file7.mp4")
         f.close()
         vcm = VideoCopyManager(source.name, target.name, None, ignore_file.name)
@@ -126,22 +127,58 @@ class TestVideoCopyManager(unittest.TestCase):
         file6_src = os.path.join(dir2_src, "file6.mp4")
         file7_src = os.path.join(dir2_src, "file7.mp4")
 
-        open(file1_src, 'wb')
-        open(file1_tgt, 'wb')
-        open(file2_src, 'wb')
+        open(file1_src, "wb")
+        open(file1_tgt, "wb")
+        open(file2_src, "wb")
         os.mkdir(dir1_src)
         os.mkdir(dir1_tgt)
-        open(file3_src, 'wb')
-        open(file4_tgt, 'wb')
-        open(file5_src, 'wb')
-        open(file5_tgt, 'wb')
+        open(file3_src, "wb")
+        open(file4_tgt, "wb")
+        open(file5_src, "wb")
+        open(file5_tgt, "wb")
         os.mkdir(dir2_src)
         os.mkdir(dir2_tgt)
-        open(file3_tgt, 'wb')
-        open(file6_src, 'wb')
-        open(file7_src, 'wb')
+        open(file3_tgt, "wb")
+        open(file6_src, "wb")
+        open(file7_src, "wb")
 
         result = vcm.get_files_missing_in_target()
         self.assertEqual(2, len(result))
         self.assertTrue(result.__contains__(file2_src))
         self.assertTrue(result.__contains__(file6_src))
+
+    def test_videocopymanager_main(self):
+        with self.assertRaises(TypeError):
+            videocopymanager.main("Test")
+        with self.assertRaises(TypeError):
+            videocopymanager.main(["test","test"])
+        with self.assertRaises(TypeError):
+            videocopymanager.main(["test","test","test","test"])
+        with self.assertRaises(TypeError):
+            videocopymanager.main(["test","test","test","test","test","test"])
+        source = tempfile.TemporaryDirectory()
+        target = tempfile.TemporaryDirectory()
+        cp_target = os.path.join(target.name,"cp_tgt")
+        os.mkdir(cp_target)
+        ignore_file = tempfile.NamedTemporaryFile()
+        f = open(ignore_file.name, "w")
+        f.write("file2.mp4")
+        f.close()
+        file1_src = os.path.join(source.name, "file1.mp4")
+        file1_tgt = os.path.join(target.name, "file1.mp4")
+        file2_src = os.path.join(source.name, "file2.mp4")
+        file3_src = os.path.join(source.name, "file3.mp4")
+        open(file1_src,"wb")
+        open(file1_tgt,"wb")
+        open(file2_src,"wb")
+        open(file3_src,"wb")
+        out = io.StringIO()
+        sys.stdout = out
+        videocopymanager.main(["show",source.name,target.name,cp_target,ignore_file.name])
+        expected_out = file3_src
+        self.assertEqual(expected_out,out.getvalue().strip())
+        videocopymanager.main(["cp",source.name,target.name,cp_target,ignore_file.name])
+        videocopymanager.main(["show",source.name,target.name,cp_target,ignore_file.name])
+        expected_out += "\nNow copying " + file3_src + ".\n" + \
+                        "Successfully copied " + file3_src + "."
+        self.assertEqual(expected_out,out.getvalue().strip())
