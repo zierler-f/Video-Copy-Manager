@@ -176,7 +176,7 @@ class TestVideoCopyManager(unittest.TestCase):
         out = io.StringIO()
         sys.stdout = out
         videocopymanager.main(["show", source.name, target.name, cp_target, ignore_file.name])
-        expected_out = file3_src
+        expected_out = os.path.basename(file3_src)
         self.assertEqual(expected_out, out.getvalue().strip())
         videocopymanager.main(["cp", source.name, target.name, cp_target, ignore_file.name])
         videocopymanager.main(["show", source.name, target.name, cp_target, ignore_file.name])

@@ -101,7 +101,7 @@ class VideoCopyManager:
 
     def print_files_missing_in_target(self):
         for file in self.get_files_missing_in_target():
-            print(file)
+            print(os.path.basename(file))
 
     def copy_missing_files_to_target(self):
         for file in self.get_files_missing_in_target():
