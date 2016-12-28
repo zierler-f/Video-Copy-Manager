@@ -92,12 +92,10 @@ class VideoCopyManager:
         return missing_files
 
     def get_ignore_filenames(self):
-        ignore_filenames = []
         if self.ignore_file is not None and os.path.isfile(self.ignore_file):
-            with open(self.ignore_file) as f:
-                for line in f:
-                    ignore_filenames.append(line)
-        return ignore_filenames
+            f = open(self.ignore_file)
+            return f.read().splitlines()
+        return []
 
     def print_files_missing_in_target(self):
         for file in self.get_files_missing_in_target():
@@ -109,9 +107,10 @@ class VideoCopyManager:
             if not os.path.isdir(cp_target):
                 print(cp_target + " not found. Now using target (" + self.target + ") instead.")
                 cp_target = self.target
-            print("Now copying " + file + ".")
-            copyfile(file, os.path.join(cp_target, os.path.basename(file)))
-            print("Successfully copied " + file + ".")
+            file_basename = os.path.basename(file)
+            print("Now copying " + file_basename + ".")
+            copyfile(file, os.path.join(cp_target, file_basename))
+            print("Successfully copied " + file_basename + ".")
 
 
 if __name__ == "__main__":

@@ -176,10 +176,11 @@ class TestVideoCopyManager(unittest.TestCase):
         out = io.StringIO()
         sys.stdout = out
         videocopymanager.main(["show", source.name, target.name, cp_target, ignore_file.name])
-        expected_out = os.path.basename(file3_src)
+        file3_basename = os.path.basename(file3_src)
+        expected_out = file3_basename
         self.assertEqual(expected_out, out.getvalue().strip())
         videocopymanager.main(["cp", source.name, target.name, cp_target, ignore_file.name])
         videocopymanager.main(["show", source.name, target.name, cp_target, ignore_file.name])
-        expected_out += "\nNow copying " + file3_src + ".\n" + \
-                        "Successfully copied " + file3_src + "."
+        expected_out += "\nNow copying " + file3_basename + ".\n" + \
+                        "Successfully copied " + file3_basename + "."
         self.assertEqual(expected_out, out.getvalue().strip())
