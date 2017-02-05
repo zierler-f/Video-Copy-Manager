@@ -24,6 +24,8 @@ def main(args):
             vcm.print_files_missing_in_target()
         elif run_type == "cp":
             vcm.copy_missing_files_to_target()
+        elif run_type == "ln":
+            vcm.link_missing_files_to_target()
         else:
             raise TypeError("Please use a valid argument for type. Valid arguments are 'show' and 'cp'!")
     else:
@@ -111,6 +113,17 @@ class VideoCopyManager:
             print("Now copying " + file_basename + ".")
             copyfile(file, os.path.join(cp_target, file_basename))
             print("Successfully copied " + file_basename + ".")
+
+    def link_missing_files_to_target(self):
+        for file in self.get_files_missing_in_target():
+            cp_target = self.cp_target
+            if not os.path.isdir(cp_target):
+                print(cp_target + " not found. Now using target (" + self.target + ") instead.")
+                cp_target = self.target
+            file_basename = os.path.basename(file)
+            print("Now linking " + file_basename + ".")
+            os.link(file, os.path.join(cp_target, file_basename))
+            print("Successfully linked " + file_basename + ".")
 
 
 if __name__ == "__main__":

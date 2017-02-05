@@ -187,3 +187,8 @@ class TestVideoCopyManager(unittest.TestCase):
         expected_out += "\nNow copying " + file3_basename + ".\n" + \
                         "Successfully copied " + file3_basename + "."
         self.assertEqual(expected_out, out.getvalue().strip())
+        file2_basename = os.path.basename(file2_src)
+        videocopymanager.main(["ln", source.name, target.name])
+        expected_out += "\nNow linking " + file2_basename + ".\n" + \
+                        "Successfully linked " + file2_basename + "."
+        self.assertEqual(expected_out, out.getvalue().strip())

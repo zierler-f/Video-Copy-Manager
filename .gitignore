@@ -90,6 +90,7 @@ ENV/
 
 # PyCharm/IntelliJ Files
 .idea/
+*.iml
 
 # Sonarqube Files
 .sonar/
